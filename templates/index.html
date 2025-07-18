@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SaraswatiGPT - Voice AI Chatbot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f3f8fc; }
+        .chat-box { max-width: 650px; margin: 40px auto; padding: 32px; background: #fff; border-radius: 18px; box-shadow: 0 0 14px #ccc; }
+        .logo { font-size: 2rem; font-weight: bold; color: #276678; margin-bottom: 20px;}
+        .reset-btn { float: right; }
+        .history-section { max-height: 330px; overflow-y: auto; margin-bottom: 30px; }
+        .history-q { color: #0d6efd; font-weight: 500; }
+        .history-a { margin-bottom: 15px; color: #1a1a1a; }
+        .mic-btn { background: #e6e6fa; color: #276678; border: none; font-size: 1.7rem; border-radius: 100%; width: 48px; height: 48px;}
+        .mic-btn:active { background: #c6e6ff; }
+    </style>
+</head>
+<body>
+    <div class="chat-box">
+        <div class="logo">
+            SaraswatiGPT
+            <a href="/reset" class="btn btn-warning btn-sm reset-btn">Reset Chat</a>
+        </div>
+        <form method="post" autocomplete="off">
+            <div class="input-group mb-3">
+                <input id="question" type="text" class="form-control form-control-lg" name="question" placeholder="Type or speak your question..." autofocus>
+                <button class="mic-btn" type="button" onclick="startRecognition()" title="Speak"><span id="mic">&#127908;</span></button>
+                <button class="btn btn-primary btn-lg" type="submit">Ask</button>
+            </div>
+        </form>
+        <div class="mt-4 history-section">
+            {% for q, a in history %}
+                <div class="history-q">You: {{q}}</div>
+                <div class="history-a">SaraswatiGPT: {{a}}</div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Simple Voice Recognition (works on Chrome/Edge/Android) -->
+    <script>
+        function startRecognition() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert("Sorry, your browser doesn't support voice input.");
+                return;
+            }
+            var recognition = new webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.onresult = function(event) {
+                document.getElementById('question').value = event.results[0][0].transcript;
+            };
+            recognition.onerror = function() {
+                alert('Voice recognition error!');
+            };
+            recognition.start();
+        }
+    </script>
+</body>
+</html>
